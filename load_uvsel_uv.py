@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+"""
+This script will plot
+@version:0.9
+@contact: sgguo@shao.ac.cn
+@author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
+"""
+
 def load_uvsel_uv(uv_filename):
     # Pick up the data info
     # uv data parameters:

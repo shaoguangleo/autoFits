@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+"""
+This script will plot
+@version:0.9
+@contact: sgguo@shao.ac.cn
+@author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
+"""
 # The main function to auto model fit
 import load_uvsel_uv
 import string # for string.atof
@@ -7,6 +14,7 @@ import cart2pol
 #import copy
 import map_size
 import all_class
+import maplot
 
 # Default setting #
 # uv data for modelfit
@@ -121,3 +129,108 @@ for cmp_num in range(6):
     my_units = all_class.units()
     my_units = map_size.map_size(nx,xinmap)
     print my_units.xinc
+
+    #########
+    #TTTTTToooDO
+    map_org = maplot.maplot(uv_data_residual,my_units,domap)
+
+    #Setting the filtering intensity based on the beam
+    map_re = np.real(map_org)
+
+    #Gussian filtering
+    hsize = 20
+    sigma = 10
+    '''
+    filt = (fspecial('gaussian',  hsize, sigma));
+    my_map_filt=conv2(my_map_re,filt,'same') ;
+    my_map_positive = my_map_filt-min(my_map_filt(:));
+    my_map_normal = my_map_positive./max(my_map_positive(:));
+    my_map = my_map_normal;
+
+
+    if trace ==1:
+        fidx=fidx+1;
+        plt.figure(fidx);
+        plt.imshow(my_map./max(my_map(:)));
+        plt.title('maplot(), map image');
+
+    [peakInf_node_isLeaf_sort_am,peakInf_node_isLeaf_sort_energy_sum,peakInf_node_isLeaf,peakInf_node_all] =my_find_peaks(my_map);
+
+    %%
+    % Found the highest point in the image
+    % [x0_pix, y0_pix] is the axis of highest point, unit:pixel, axis original point locate left-up corner
+    %     my_map_max = max(my_map(:));
+    %     [c r] = find(my_map>=my_map_max);
+    %     y0_pix= c(1);
+    %     x0_pix= r(1);
+    centerPos = peakInf_node_isLeaf_sort_am{1}.centerPos;
+    y0_pix = centerPos(1);
+    x0_pix = centerPos(2);
+    %%
+    % change the axis[x0_mas,y0_mas] unit: mas,axis original point in the image center
+    y0_mas = -1*(yinmap*(y0_pix - (ny/2+1)));
+    x0_mas = -1*(xinmap*(x0_pix - (nx/2+1)));
+    %%
+    % using the highest point [x0_mas,y0_mas] to init x_fit_new_cmp
+    x_fit_new_cmp = [1,x0_mas,y0_mas,1,1,0];
+    x_fit_new_cmp_int = x_fit_new_cmp
+    %%
+    % save the inter-result to comp_filename
+    comp_filename = './2.output/xu_comps.txt';
+    headInfo = {};
+    headInfo{end+1} = ['uv_filename = ' uv_filename];
+    headInfo{end+1} =  datestr(now,0);
+    headInfo{end+1} = ' x_fit_new_cmp_int ';
+    my_save_comps(x_fit_new_cmp_int,comp_filename,headInfo);
+
+    uv_re_im_fit_multi_wt = my_comp2uv_multi_wt(x_fit_multi,uvData_select);
+    residual_xu_wt = uv_re_im_read_wt - my_comp2uv_multi_wt(x_fit_multi,uvData_select);
+
+    % modelfit for new cmp
+    x_fit_new_cmp(5)=1;
+    x_fit_new_cmp(6)=0;
+    x_fit_new_cmp(1)=abs(x_fit_new_cmp(1));
+    x_fit_new_cmp(4)=abs(x_fit_new_cmp(4));
+    options = optimset('MaxIter',50);
+    [x_fit_new_cmp,resnorm,residual,exitflag,output] = ...
+        lsqcurvefit(@my_comp2uv_multi_wt,x_fit_new_cmp,uvData_select,residual_xu_wt,[],[],options);
+chi_square = resnorm/(size(uvData_select,1)*2-cmp_num*4+2)
+
+    comp_filename = './2.output/xu_comps.txt';
+    headInfo = {};
+    headInfo{end+1} = ['uv_filename = ' uv_filename];
+    headInfo{end+1} =  datestr(now,0);
+    headInfo{end+1} = ' x_fit_new_cmp ';
+    headInfo{end+1} = sprintf('chi_square = %0.5e',chi_square);
+    my_save_comps(x_fit_new_cmp,comp_filename,headInfo);
+
+    x_fit_new_cmp(5)=1;
+    x_fit_new_cmp(6)=0;
+    x_fit_new_cmp(1)=abs(x_fit_new_cmp(1));
+    x_fit_new_cmp(4)=abs(x_fit_new_cmp(4));
+    x_fit_multi = [x_fit_multi x_fit_new_cmp ];
+    x_fit_new_cmp
+    % modelfit for all cmp
+
+    options = optimset('MaxIter',100);
+    %optimistic Gussian Model
+    [x_fit_multi,resnorm,residual,exitflag,output] = ...
+        lsqcurvefit(@my_comp2uv_multi_wt,x_fit_multi,uvData_select,uv_re_im_read_wt,[],[],options);
+%    lsqcurvefit(@my_comp2uv_multi_wt,x_fit_multi,uvData_select,uv_re_im_read_wt);
+
+    cmp_num
+    x_fit_multi_array = reshape(x_fit_multi,6,cmp_num)'
+    chi_square = resnorm/(size(uvData_select,1)*2-cmp_num*4+2)
+
+
+    headInfo = {};
+    headInfo{end+1} = ['uv_filename = ' uv_filename];
+    headInfo{end+1} =  datestr(now,0);
+    headInfo{end+1} = sprintf('chi_square = %0.5e',chi_square);
+    my_save_comps(x_fit_multi_array,comp_filename,headInfo);
+
+    fidx = fidx+1;
+    my_color = [ 1.000 0.314 0.510 ];
+    my_plot_fits(my_fits,fidx);
+    my_plot_comp_all(x_fit_multi_array,my_units,fidx, my_color);
+    '''

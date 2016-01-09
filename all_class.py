@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+"""
+This script will plot
+@version:0.9
+@contact: sgguo@shao.ac.cn
+@author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
+"""
+
 # Here for the units structure
 class units:
     def __init__(self):
@@ -20,3 +28,22 @@ class uvb:
         self.nu = 512
         self.nv = 512
         self.nbin = 262144
+
+class gcf:
+    def __init__(self):
+        self.nmask =2
+        self.tgtocg = 120
+        self.convfn = [0 for i in range(302)]
+        self.rxft_1024 = [0 for i in range(1024)]
+        self.ryft_1024 = [0 for i in range(1024)]
+        self.rxft_256 = [0 for i in range(256)]
+        self.ryft_256 = [0 for i in range(256)]
+        self.rxft = [0 for i in range(1024)]
+        self.ryft = [0 for i in range(1024)]
+
+class vis:
+    def __init__(self):
+        self.amp = 0.0
+        self.phs = 0.0
+        self.modamp = 0.0
+        self.modphs = 0.0

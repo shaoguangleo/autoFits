@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+"""
+This script will plot
+@version:0.9
+@contact: sgguo@shao.ac.cn
+@author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
+"""
+
 #import fix
 import numpy
 import comp2uv
