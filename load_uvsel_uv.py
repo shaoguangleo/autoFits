@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This script will plot
+This script will load uv sel uv
 @version:0.9
 @contact: sgguo@shao.ac.cn
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
