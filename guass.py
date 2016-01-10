@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 """
-
-Module providing functionality surrounding gaussian function.
-
+This script Module providing functionality surrounding gaussian function.
+@version:0.9
+@contact: sgguo@shao.ac.cn
+@author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
 """
 
 import sys
