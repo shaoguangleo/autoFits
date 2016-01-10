@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This script will plot
+This script include all the class units need for the program
 @version:0.9
 @contact: sgguo@shao.ac.cn
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
