@@ -18,6 +18,7 @@ import all_class
 import maplot
 #import scipy.ndimage.filters as filters
 import guass
+import matplotlib.pyplot as plt
 
 # Default setting #
 # uv data for modelfit
@@ -26,6 +27,7 @@ uv_filename   = './input/1730-130.u.2009_12_10.uvf.txt'
 fits_filename ='./input/1730-130.u.2009_12_10.icn.fits'
 
 debug = 0 # if debug equal 1, will print verbose informations.
+trace = 1
 
 # Loading the visibility data
 uv_data = []
@@ -149,24 +151,26 @@ for cmp_num in range(6):
 
     #filt = filters.gaussian_filter(hsize,sigma)
     filt = guass.fspecial_gauss(hsize,sigma)
-    print '-'*80 + 'filt is'
-    print filt
-    print '-'*80
+
+    if debug:
+        print '-'*80 + 'filt is'
+        print filt
+        print '-'*80
 
 
-    '''
-    filt = (fspecial('gaussian',  hsize, sigma));
-    my_map_filt=conv2(my_map_re,filt,'same') ;
-    my_map_positive = my_map_filt-min(my_map_filt(:));
-    my_map_normal = my_map_positive./max(my_map_positive(:));
-    my_map = my_map_normal;
-
+    map_filt = np.convolve(map_re,filt,'same')
+    map_positive = map_filt - min(map_filt)
+    map_normal = map_positive/max(map_positive)
+    my_map = map_normal
 
     if trace ==1:
         fidx=fidx+1;
         plt.figure(fidx);
         plt.imshow(my_map./max(my_map(:)));
         plt.title('maplot(), map image');
+
+    '''
+
 
     [peakInf_node_isLeaf_sort_am,peakInf_node_isLeaf_sort_energy_sum,peakInf_node_isLeaf,peakInf_node_all] =my_find_peaks(my_map);
 
