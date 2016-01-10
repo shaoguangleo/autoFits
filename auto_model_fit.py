@@ -6,6 +6,7 @@ This script will plot
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
 """
 # The main function to auto model fit
+import numpy as np
 import load_uvsel_uv
 import string # for string.atof
 import math # for cos and sin
@@ -15,12 +16,16 @@ import cart2pol
 import map_size
 import all_class
 import maplot
+#import scipy.ndimage.filters as filters
+import guass
 
 # Default setting #
 # uv data for modelfit
 uv_filename   = './input/1730-130.u.2009_12_10.uvf.txt'
 # fits image data for plot
 fits_filename ='./input/1730-130.u.2009_12_10.icn.fits'
+
+debug = 0 # if debug equal 1, will print verbose informations.
 
 # Loading the visibility data
 uv_data = []
@@ -95,14 +100,15 @@ for cmp_num in range(6):
         temp  = cart2pol.cart2pol(uv_data_re[i],uv_data_im[i])
         uv_data_phs.append(temp[0])
         uv_data_amp.append(temp[1])
-    '''
-    print len(uv_data_phs)
-    print len(uv_data_amp)
-    print '*'*40
-    print (uv_data_phs)
-    print '*'*40
-    print (uv_data_amp)
-    '''
+
+    if debug:
+        print len(uv_data_phs)
+        print len(uv_data_amp)
+        print '*'*40
+        print (uv_data_phs)
+        print '*'*40
+        print (uv_data_amp)
+
     # Calculate the residual
     # And import the new amp&&phs infos
     #uv_data_residual = uv_data_select  => also the same list
@@ -140,6 +146,14 @@ for cmp_num in range(6):
     #Gussian filtering
     hsize = 20
     sigma = 10
+
+    #filt = filters.gaussian_filter(hsize,sigma)
+    filt = guass.fspecial_gauss(hsize,sigma)
+    print '-'*80 + 'filt is'
+    print filt
+    print '-'*80
+
+
     '''
     filt = (fspecial('gaussian',  hsize, sigma));
     my_map_filt=conv2(my_map_re,filt,'same') ;
