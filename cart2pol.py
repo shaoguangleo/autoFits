@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This script will plot
+This script will transform cartesian coordinates to polar or cylindrical
 @version:0.9
 @contact: sgguo@shao.ac.cn
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
