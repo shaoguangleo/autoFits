@@ -28,7 +28,7 @@ def fspecial_gauss(size, sigma):
 def main():
     """
     Show simple use cases for functionality provided by this module."""
-    from mpl_toolkits.mplot3d.axes3d import Axes3D
+    #from mpl_toolkits.mplot3d.axes3d import Axes3D
     import pylab
     argv = sys.argv
     if len(argv) != 3:
