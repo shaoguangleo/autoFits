@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-This script will plot
+This script will comp the uv data
 @version:0.9
 @contact: sgguo@shao.ac.cn
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
