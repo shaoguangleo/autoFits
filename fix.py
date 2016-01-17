@@ -17,3 +17,7 @@ def fix(number):
         value = 0.0
     return value
 
+
+if __name__ == '__main__':
+    print fix(3.5)
+    print fix(5.3)
