@@ -55,3 +55,12 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Disable the m file
+*.m
+*.png
+
+# Disable the idea files
+.idea/*
+
+2.auot-*
