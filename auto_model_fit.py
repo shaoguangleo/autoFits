@@ -7,6 +7,8 @@ This script will plot
 """
 # The main function to auto model fit
 import numpy as np
+import time
+
 import load_uvsel_uv
 import string # for string.atof
 import math # for cos and sin
@@ -19,6 +21,13 @@ import maplot
 #import scipy.ndimage.filters as filters
 import guass
 import matplotlib.pyplot as plt
+import find_peaks
+import save_comps
+
+import comp2uv_multi_wt
+import save_comps
+import plot_fits
+import read_fits
 
 # Default setting #
 # uv data for modelfit
@@ -35,6 +44,7 @@ uv_data = load_uvsel_uv.load_uvsel_uv(uv_filename)
 
 # Reading the fits file for plot
 # fits_data = fitsread(fits_filename)
+fits_data = read_fits.read_fits('myfitsfile')
 
 # Get the uv weight value
 weight_idx = 5
@@ -164,91 +174,130 @@ for cmp_num in range(6):
     my_map = map_normal
 
     if trace ==1:
-        fidx=fidx+1;
-        plt.figure(fidx);
-        plt.imshow(my_map./max(my_map(:)));
-        plt.title('maplot(), map image');
-
-    '''
+        fidx=fidx+1
+        plt.figure(fidx)
+        plt.imshow(my_map/max(my_map))
+        plt.title('maplot(), map image')
 
 
-    [peakInf_node_isLeaf_sort_am,peakInf_node_isLeaf_sort_energy_sum,peakInf_node_isLeaf,peakInf_node_all] =my_find_peaks(my_map);
+    [peakInf_node_isLeaf_sort_am,peakInf_node_isLeaf_sort_energy_sum,peakInf_node_isLeaf,peakInf_node_all] =find_peaks.find_peaks(my_map)
 
-    %%
-    % Found the highest point in the image
-    % [x0_pix, y0_pix] is the axis of highest point, unit:pixel, axis original point locate left-up corner
-    %     my_map_max = max(my_map(:));
-    %     [c r] = find(my_map>=my_map_max);
-    %     y0_pix= c(1);
-    %     x0_pix= r(1);
-    centerPos = peakInf_node_isLeaf_sort_am{1}.centerPos;
-    y0_pix = centerPos(1);
-    x0_pix = centerPos(2);
-    %%
-    % change the axis[x0_mas,y0_mas] unit: mas,axis original point in the image center
+    #
+    # Found the highest point in the image
+    # [x0_pix, y0_pix] is the axis of highest point, unit:pixel, axis original point locate left-up corner
+    #     my_map_max = max(my_map(:));
+    #     [c r] = find(my_map>=my_map_max);
+    #     y0_pix= c(1);
+    #     x0_pix= r(1);
+    centerPos = peakInf_node_isLeaf_sort_am[0]['centerPos']
+
+    y0_pix = centerPos[1]
+    x0_pix = centerPos[2]
+
+
+    #%%
+    #% change the axis[x0_mas,y0_mas] unit: mas,axis original point in the image center
     y0_mas = -1*(yinmap*(y0_pix - (ny/2+1)));
     x0_mas = -1*(xinmap*(x0_pix - (nx/2+1)));
-    %%
-    % using the highest point [x0_mas,y0_mas] to init x_fit_new_cmp
+    print x0_mas
+    #%%
+    #% using the highest point [x0_mas,y0_mas] to init x_fit_new_cmp
     x_fit_new_cmp = [1,x0_mas,y0_mas,1,1,0];
     x_fit_new_cmp_int = x_fit_new_cmp
-    %%
-    % save the inter-result to comp_filename
-    comp_filename = './2.output/xu_comps.txt';
-    headInfo = {};
-    headInfo{end+1} = ['uv_filename = ' uv_filename];
-    headInfo{end+1} =  datestr(now,0);
-    headInfo{end+1} = ' x_fit_new_cmp_int ';
-    my_save_comps(x_fit_new_cmp_int,comp_filename,headInfo);
+    #%%
+    #% save the inter-result to comp_filename
+    comp_filename = './2.output/comps.txt'
+    headInfo = []
+    headInfo.append('uv_filename = %s' % uv_filename)
+    headInfo.append('%s' % time.asctime())
+    headInfo.append(' x_fit_new_cmp_int ')
 
-    uv_re_im_fit_multi_wt = my_comp2uv_multi_wt(x_fit_multi,uvData_select);
-    residual_xu_wt = uv_re_im_read_wt - my_comp2uv_multi_wt(x_fit_multi,uvData_select);
+    save_comps.save_comps(x_fit_new_cmp_int,comp_filename,headInfo)
 
-    % modelfit for new cmp
-    x_fit_new_cmp(5)=1;
-    x_fit_new_cmp(6)=0;
-    x_fit_new_cmp(1)=abs(x_fit_new_cmp(1));
-    x_fit_new_cmp(4)=abs(x_fit_new_cmp(4));
-    options = optimset('MaxIter',50);
-    [x_fit_new_cmp,resnorm,residual,exitflag,output] = ...
-        lsqcurvefit(@my_comp2uv_multi_wt,x_fit_new_cmp,uvData_select,residual_xu_wt,[],[],options);
-chi_square = resnorm/(size(uvData_select,1)*2-cmp_num*4+2)
+    uv_re_im_fit_multi_wt = comp2uv_multi_wt.comp2uv_multi_wt(x_fit_multi,uv_data_select)
 
-    comp_filename = './2.output/xu_comps.txt';
-    headInfo = {};
-    headInfo{end+1} = ['uv_filename = ' uv_filename];
-    headInfo{end+1} =  datestr(now,0);
-    headInfo{end+1} = ' x_fit_new_cmp ';
-    headInfo{end+1} = sprintf('chi_square = %0.5e',chi_square);
-    my_save_comps(x_fit_new_cmp,comp_filename,headInfo);
+    residual_xu_wt = []
 
-    x_fit_new_cmp(5)=1;
-    x_fit_new_cmp(6)=0;
-    x_fit_new_cmp(1)=abs(x_fit_new_cmp(1));
-    x_fit_new_cmp(4)=abs(x_fit_new_cmp(4));
+    for i in range(len(uv_re_im_read_wt)):
+        temp1 = uv_re_im_read_wt[i][0] - uv_re_im_fit_multi_wt[i][0]
+        temp2 = uv_re_im_read_wt[i][1] - uv_re_im_fit_multi_wt[i][1]
+        residual_xu_wt.append([temp1,temp2])
+
+    #% modelfit for new cmp
+    x_fit_new_cmp = [0 for i in range(6)]
+    x_fit_new_cmp[4] = 1
+    x_fit_new_cmp[5] = 0
+    x_fit_new_cmp[0] = abs(x_fit_new_cmp[0])
+    x_fit_new_cmp[3] = abs(x_fit_new_cmp[3])
+
+#todo
+
+#    options = optimset('MaxIter',50);
+#    [x_fit_new_cmp,resnorm,residual,exitflag,output] = ...
+#        lsqcurvefit(@my_comp2uv_multi_wt,x_fit_new_cmp,uvData_select,residual_xu_wt,[],[],options);
+#chi_square = resnorm/(size(uvData_select,1)*2-cmp_num*4+2)
+    chi_square = 1.4882
+
+    comp_filename = './2.output/xu_comps.txt'
+    headInfo = []
+    headInfo = []
+    headInfo.append('uv_filename = %s' % uv_filename)
+    headInfo.append('%s' % time.asctime())
+    headInfo.append(' x_fit_new_cmp ')
+    headInfo.append('chi_square = %0.5e',chi_square)
+
+    save_comps.save_comps(x_fit_new_cmp,comp_filename,headInfo)
+
+
+    x_fit_new_cmp = [0 for i in range(6)]
+    x_fit_new_cmp[4] = 1
+    x_fit_new_cmp[5] = 0
+    x_fit_new_cmp[0] = abs(x_fit_new_cmp[0])
+    x_fit_new_cmp[3] = abs(x_fit_new_cmp[3])
+
     x_fit_multi = [x_fit_multi x_fit_new_cmp ];
     x_fit_new_cmp
-    % modelfit for all cmp
+    #% modelfit for all cmp
 
-    options = optimset('MaxIter',100);
-    %optimistic Gussian Model
-    [x_fit_multi,resnorm,residual,exitflag,output] = ...
-        lsqcurvefit(@my_comp2uv_multi_wt,x_fit_multi,uvData_select,uv_re_im_read_wt,[],[],options);
-%    lsqcurvefit(@my_comp2uv_multi_wt,x_fit_multi,uvData_select,uv_re_im_read_wt);
+#todo
+#    options = optimset('MaxIter',100);
+    #%optimistic Gussian Model
+#    [x_fit_multi,resnorm,residual,exitflag,output] = ...
+#        lsqcurvefit(@my_comp2uv_multi_wt,x_fit_multi,uvData_select,uv_re_im_read_wt,[],[],options);
 
-    cmp_num
+#todo
+#    cmp_num
     x_fit_multi_array = reshape(x_fit_multi,6,cmp_num)'
-    chi_square = resnorm/(size(uvData_select,1)*2-cmp_num*4+2)
+#    chi_square = resnorm/(size(uvData_select,1)*2-cmp_num*4+2)
 
 
-    headInfo = {};
-    headInfo{end+1} = ['uv_filename = ' uv_filename];
-    headInfo{end+1} =  datestr(now,0);
-    headInfo{end+1} = sprintf('chi_square = %0.5e',chi_square);
-    my_save_comps(x_fit_multi_array,comp_filename,headInfo);
+    headInfo = []
+    headInfo.append('uv_filename = %s' % uv_filename)
+    headInfo.append('%s' % time.asctime())
+    headInfo.append(' x_fit_new_cmp ')
+    headInfo.append('chi_square = %0.5e',chi_square)
 
-    fidx = fidx+1;
-    my_color = [ 1.000 0.314 0.510 ];
-    my_plot_fits(my_fits,fidx);
+    save_comps.save_comps(x_fit_multi_array,comp_filename,headInfo)
+
+    fidx = fidx+1
+    my_color = [ 1.000,0.314,0.510 ]
+    plot_fits.plot_fits(my_fits,fidx)
+    my_plot_fits(my_fits,fidx)
     my_plot_comp_all(x_fit_multi_array,my_units,fidx, my_color);
-    '''
+
+
+'''
+#
+# x_fit_multi_array =
+%
+%     2.6814    0.0048   -0.0077    0.3561    0.2081    0.0165
+%     0.4391    0.1298    2.1970    1.3085    1.0000         0
+%     0.1362    1.8233    8.2785    1.8745    1.0000         0
+%
+% x_fit_multi_array =
+%
+%     2.6868    0.0049   -0.0080    0.3575    0.2135    0.0162
+%     0.4552    0.1319    2.1977    1.3389    1.0000         0
+%     0.2071    1.7138    8.3498    2.8732    1.0000         0
+%     0.1354    0.0591   24.2446    3.9032    1.0000         0
+'''
