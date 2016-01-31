@@ -21,13 +21,14 @@ import maplot
 #import scipy.ndimage.filters as filters
 import guass
 import matplotlib.pyplot as plt
-import find_peaks
+#import find_peaks
 import save_comps
 
 import comp2uv_multi_wt
 import save_comps
 import plot_fits
 import read_fits
+import pyfits
 
 # Default setting #
 # uv data for modelfit
@@ -35,7 +36,7 @@ uv_filename   = './input/1730-130.u.2009_12_10.uvf.txt'
 # fits image data for plot
 fits_filename ='./input/1730-130.u.2009_12_10.icn.fits'
 
-debug = 0 # if debug equal 1, will print verbose informations.
+#debug = 1 # if debug equal 1, will print verbose informations.
 trace = 1
 
 # Loading the visibility data
@@ -44,7 +45,13 @@ uv_data = load_uvsel_uv.load_uvsel_uv(uv_filename)
 
 # Reading the fits file for plot
 # fits_data = fitsread(fits_filename)
-fits_data = read_fits.read_fits('myfitsfile')
+#Todo will read standard FITS file in the future
+#fits_data = read_fits.read_fits('input/1730-130.u.2009_12_10.icn.fits')
+fits_data = pyfits.open('input/test.fits')
+print fits_data[0].data
+
+aa = fits_data[0].data
+plot_fits.plot_fits(aa[0][0],112)
 
 # Get the uv weight value
 weight_idx = 5
@@ -113,14 +120,14 @@ for cmp_num in range(6):
         uv_data_phs.append(temp[0])
         uv_data_amp.append(temp[1])
 
-    if debug:
+    #if debug:
+    if all_class.debug:
         print len(uv_data_phs)
         print len(uv_data_amp)
         print '*'*40
         print (uv_data_phs)
         print '*'*40
         print (uv_data_amp)
-
     # Calculate the residual
     # And import the new amp&&phs infos
     #uv_data_residual = uv_data_select  => also the same list
@@ -134,10 +141,9 @@ for cmp_num in range(6):
            uv_data_residual[i].insert(j,uv_data_select[i].split(',')[j])
         uv_data_residual[i][2] = uv_data_amp[i]
         uv_data_residual[i][3] = uv_data_phs[i]
-    print '*'*40
-    print uv_data_residual[0]
-    print '*'*40
-
+    if all_class.debug:
+        print '*'*40
+        print uv_data_residual[0]
     # Setting the maplot parameters
     nx = 1024
     ny = nx
@@ -148,10 +154,12 @@ for cmp_num in range(6):
     my_units = map_size.map_size(nx,xinmap)
     print my_units.xinc
 
+    all_class.print_debug()
     #########
     #TTTTTToooDO
     map_org = maplot.maplot(uv_data_residual,my_units,domap)
 
+    all_class.print_debug()
     #Setting the filtering intensity based on the beam
     map_re = np.real(map_org)
 
@@ -162,7 +170,7 @@ for cmp_num in range(6):
     #filt = filters.gaussian_filter(hsize,sigma)
     filt = guass.fspecial_gauss(hsize,sigma)
 
-    if debug:
+    if all_class.debug:
         print '-'*80 + 'filt is'
         print filt
         print '-'*80
@@ -180,7 +188,7 @@ for cmp_num in range(6):
         plt.title('maplot(), map image')
 
 
-    [peakInf_node_isLeaf_sort_am,peakInf_node_isLeaf_sort_energy_sum,peakInf_node_isLeaf,peakInf_node_all] =find_peaks.find_peaks(my_map)
+#    [peakInf_node_isLeaf_sort_am,peakInf_node_isLeaf_sort_energy_sum,peakInf_node_isLeaf,peakInf_node_all] =find_peaks.find_peaks(my_map)
 
     #
     # Found the highest point in the image
@@ -199,7 +207,9 @@ for cmp_num in range(6):
     #% change the axis[x0_mas,y0_mas] unit: mas,axis original point in the image center
     y0_mas = -1*(yinmap*(y0_pix - (ny/2+1)));
     x0_mas = -1*(xinmap*(x0_pix - (nx/2+1)));
-    print x0_mas
+   # if debug:
+    if all_class.debug:
+        print x0_mas
     #%%
     #% using the highest point [x0_mas,y0_mas] to init x_fit_new_cmp
     x_fit_new_cmp = [1,x0_mas,y0_mas,1,1,0];
@@ -284,8 +294,8 @@ for cmp_num in range(6):
     fidx = fidx+1
     my_color = [ 1.000,0.314,0.510 ]
     plot_fits.plot_fits(my_fits,fidx)
-    my_plot_fits(my_fits,fidx)
-    my_plot_comp_all(x_fit_multi_array,my_units,fidx, my_color);
+    #my_plot_fits(my_fits,fidx)
+    #my_plot_comp_all(x_fit_multi_array,my_units,fidx, my_color);
 
 
 '''

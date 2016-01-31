@@ -84,47 +84,62 @@ def find_peaks(my_map):
                     peakInf_split_temp['x_fit'] = []
 
                     peakInf_node_all[peakInf_leaf_last_temp['peakIdx']].son(end+1) = peakIdx
-                    peakInf_node_all{peakInf_leaf_last_temp.peakIdx}.isLeaf = 0
+                    peakInf_node_all[peakInf_leaf_last_temp.peakIdx].isLeaf = 0
 
                     peakInf_leaf_new[end] = peakInf_split_temp
                     peakInf_node_all[end] = peakInf_split_temp
-        newNodeNum = length(peakInf_leaf_new);
+        newNodeNum = len(peakInf_leaf_new)
 
 
     # Summary the pixel count, total enegne, average enegne infos.
-    for peakIdx=1:length(peakInf_node_all)
-        area =  peakInf_node_all{peakIdx}.area;
-        my_map_node = my_map.*area;
-        energy_sum = sum(my_map_node(:));
-        area_pix_sum = sum(area(:));
-        energy_per_pix = energy_sum/area_pix_sum;
+    for peakIdx in range(len(peakInf_node_all)):
+        area =  peakInf_node_all[peakIdx].area
+        #my_map_node = my_map.*area;
+        my_map_node = np.dot(my_map,area)
 
-        peakInf_node_all{peakIdx}.energy_sum = energy_sum;
-        peakInf_node_all{peakIdx}.area_pix_sum = area_pix_sum;
-        peakInf_node_all{peakIdx}.energy_per_pix = energy_per_pix;
+        size = np.size(my_map_node)
+        column = np.size(my_map_node[0])
+        row = size / column
+        energy_sum = 0.0
+        for i in range(row):
+            energy_sum += sum(my_map_node(i))
 
-    end
+        size = np.size(my_map_node)
+        column = np.size(my_map_node[0])
+        row = size / column
+        area_pix_sum = 0.0
+        for i in range(row):
+            area_pix_sum = sum(area(i))
+        energy_per_pix = energy_sum/area_pix_sum
+
+        peakInf_node_all[peakIdx].energy_sum = energy_sum
+        peakInf_node_all[peakIdx].area_pix_sum = area_pix_sum
+        peakInf_node_all[peakIdx].energy_per_pix = energy_per_pix
 
     size = np.size(my_map)
     column = np.size(my_map[0])
     row = size / column
 
     if my_trace :
-        peakImage = np.zeros(row,column)
-        for peakIdx in range(len(peakInf_node__all))
-            peakImage = peakImage.*(1-peakInf_node_all{peakIdx}.area)+ peakIdx*peakInf_node_all{peakIdx}.area;
+        peakImage = np.zeros((row,column))
+       # for peakIdx in range(len(peakInf_node__all)):
+        for peakIdx in range(42):
+            peakImage = peakImage.*(1-peakInf_node_all[peakIdx].area)+ peakIdx*peakInf_node_all[peakIdx].area;
 
-        fidx= fidx+1;figure(fidx); imagesc(peakImage); set(gca,'YDir','normal')
+        fidx= fidx+1
+        plt.figure(fidx)
+        #plt.imagesc(peakImage)
+        #plt.(gca,'YDir','normal')
         plt.grid(True)
         plt.title(['There are ' + str(len(peakInf_node_all)) + ' local peak area'])
 
     if my_trace:
         # Display every local peak area
         plot_peak_num = 0
-        for peakIdx in range(length(peakInf_node_all):-1:length(peakInf_node_all)-plot_peak_num+1):
-            area =  peakInf_node_all{peakIdx}.area
+        for peakIdx in range(42,42-plot_peak_num+1,-1):
+            area =  peakInf_node_all[peakIdx].area
             my_map_node = np.dot(my_map,area)
-            fidx= fidx+1
+            fidx = fidx+1
             plt.figure(fidx)
             plt.contour(my_map_node,v)
             plt.grid(True)
@@ -134,34 +149,34 @@ def find_peaks(my_map):
     peakInf_node_isLeaf = {}
     peakInf_node_notLeaf_all = {}
     for peakIdx in range(len(peakInf_node_all)):
-        if peakInf_node_all{peakIdx}.isLeaf:
-            peakInf_node_isLeaf{end+1} = peakInf_node_all{peakIdx}
+        if peakInf_node_all[peakIdx].isLeaf:
+            peakInf_node_isLeaf[end+1] = peakInf_node_all[peakIdx]
         else:
-            peakInf_node_notLeaf_all{end+1} = peakInf_node_all{peakIdx}
+            peakInf_node_notLeaf_all[end+1} = peakInf_node_all[peakIdx}
 
     # Sort the leaf node by the peak value
     am_all = []
     for peakIdx in range(len(peakInf_node_isLeaf)):
-        am_all(peakIdx) = peakInf_node_isLeaf{peakIdx}.am
+        am_all(peakIdx) = peakInf_node_isLeaf[peakIdx}.am
     [temp sort_idx] = sorted(am_all,'descend')
     peakInf_node_isLeaf_sort_am = {}
     for i in range(len(peakInf_node_isLeaf)):
-        peakInf_node_isLeaf_sort_am{i} = peakInf_node_isLeaf{sort_idx(i)}
+        peakInf_node_isLeaf_sort_am[i} = peakInf_node_isLeaf[sort_idx(i)}
 
     # Sort every pixel by the average power
     energy_sum_all = []
     for peakIdx=1 in range(len(peakInf_node_isLeaf)):
-        energy_sum_all(peakIdx) = peakInf_node_isLeaf{peakIdx}.energy_sum
+        energy_sum_all(peakIdx) = peakInf_node_isLeaf[peakIdx}.energy_sum
     [temp sort_idx] = sorted(energy_sum_all,'descend')
-    peakInf_node_isLeaf_sort_energy_sum = {};
+    peakInf_node_isLeaf_sort_energy_sum = [};
     for i in range(len(peakInf_node_isLeaf)):
-        peakInf_node_isLeaf_sort_energy_sum{i} = peakInf_node_isLeaf{sort_idx(i)};
+        peakInf_node_isLeaf_sort_energy_sum[i} = peakInf_node_isLeaf[sort_idx(i)};
 
     if my_trace:
         #Display every local peak area
         plot_peak_num = 0
         for peakIdx in range(plot_peak_num):
-            area =  peakInf_node_isLeaf_sort_energy_sum{peakIdx}.area;
+            area =  peakInf_node_isLeaf_sort_energy_sum[peakIdx}.area;
             my_map_node = np.dot(my_map,area)
             fidx= fidx+1
             plt.figure(fidx)

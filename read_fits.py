@@ -8,7 +8,7 @@ This script will read the fits result file
 
 import numpy as np
 
-﻿def read_fits(fits_file):
+def read_fits(fits_file):
     print 'ready read the fits file'
     a = open(fits_file)
     rst = []

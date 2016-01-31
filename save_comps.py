@@ -26,5 +26,5 @@ def save_comps(x_fit_multi_array,comp_filename,headInfo):
         for j in range(2,column):
             comp2txt_array[i][j] = x_fit_multi_array[i][j]
 
-    fileID.writelines('%6.5f, %6.5f, %6.5f, %6.5f, %6.5f, %6.5f, %6.5f' % comp2txt_array')
+    fileID.writelines('%6.5f, %6.5f, %6.5f, %6.5f, %6.5f, %6.5f, %6.5f' % comp2txt_array)
     fileID.close()

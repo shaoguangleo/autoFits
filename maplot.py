@@ -70,22 +70,22 @@ def maplot(uvData, my_units, domap):
 
 #  * Multiply the image throughout by the sensitivity function to remove the
 #%  * gridding convolution function.
-    rxft_length = len(rxft);
-    ryft_length = len(ryft);
-    sacle_x = rxft_length/my_units.nx;
-    sacle_y = ryft_length/my_units.ny;
+    rxft_length = len(rxft)
+    ryft_length = len(ryft)
+    sacle_x = rxft_length/my_units.nx
+    sacle_y = ryft_length/my_units.ny
     for y in range(my_units.ny):
         for x in range(my_units.nx):
-            x_xu = np.ceil(round(x*sacle_x));
-            y_xu = np.ceil(round(y*sacle_y));
+            x_xu = np.ceil(round(x*sacle_x))
+            y_xu = np.ceil(round(y*sacle_y))
             uvbin_array_conj_shift2_ifft2_rft[y][x] = ryft(y_xu)*rxft(x_xu)*uvbin_array_conj_shift2_ifft2(y,x);
 
     if trace ==1:
-        fidx=fidx+1;
-        plt.figure(fidx);
+        fidx=fidx+1
+        plt.figure(fidx)
         #plt.imshow(uvbin_array_conj_shift2_ifft2_rft./max(uvbin_array_conj_shift2_ifft2_rft(:)));
-        plt.imshow(uvbin_array_conj_shift2_ifft2_rft);
-        plt.title('maplot(), map image');
+        plt.imshow(uvbin_array_conj_shift2_ifft2_rft)
+        plt.title('maplot(), map image')
     # Make sure the image pixel is not complex, if it is complex means program have error
     # uvbin_array_conj_shift2_ifft2_rft_abs = abs(uvbin_array_conj_shift2_ifft2_rft);
     return uvbin_array_conj_shift2_ifft2_rft

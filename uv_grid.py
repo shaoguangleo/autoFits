@@ -191,14 +191,15 @@ end
 
     #cntr_ptr_vector_array = cntr_ptr_vector_array_real + 1j.*cntr_ptr_vector_array_imag;
     cntr_ptr_vector_array = np.zeros([nvgrid,nugrid],complex)
-    print 'size'
-    print np.size(cntr_ptr_vector_array_real)
-    print 'length'
-    print len(cntr_ptr_vector_array_real)
-    print len(cntr_ptr_vector_array_real[0])
-    print 'nugrid and nvgrid'
-    print nvgrid
-    print nugrid
+    if all_class.debug:
+        print 'size'
+        print np.size(cntr_ptr_vector_array_real)
+        print 'length'
+        print len(cntr_ptr_vector_array_real)
+        print len(cntr_ptr_vector_array_real[0])
+        print 'nugrid and nvgrid'
+        print nvgrid
+        print nugrid
     #print len(cntr_ptr_vector_array_imag[0])
     for i in range(nvgrid):
         for j in range(nugrid):
