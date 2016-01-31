@@ -64,3 +64,6 @@ target/
 .idea/*
 
 2.auot-*
+
+data/*
+input/*
