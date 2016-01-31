@@ -268,7 +268,8 @@ for cmp_num in range(6):
 
 #todo
 #    cmp_num
-    x_fit_multi_array = reshape(x_fit_multi,6,cmp_num)'
+    #x_fit_multi_array = np.reshape(x_fit_multi,6,cmp_num)'
+    x_fit_multi_array = x_fit_multi
 #    chi_square = resnorm/(size(uvData_select,1)*2-cmp_num*4+2)
 
 
