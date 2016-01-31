@@ -47,3 +47,11 @@ class vis:
         self.phs = 0.0
         self.modamp = 0.0
         self.modphs = 0.0
+
+# 1 will print verbose information and 0 for quite
+debug = 0
+
+def print_debug():
+    print '*'*40
+    print "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+    print '*'*40
