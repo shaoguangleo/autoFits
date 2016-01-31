@@ -255,7 +255,8 @@ for cmp_num in range(6):
     x_fit_new_cmp[0] = abs(x_fit_new_cmp[0])
     x_fit_new_cmp[3] = abs(x_fit_new_cmp[3])
 
-    x_fit_multi = [x_fit_multi x_fit_new_cmp ];
+    #x_fit_multi = [x_fit_multi x_fit_new_cmp ];
+    x_fit_multi.append(x_fit_new_cmp)
     x_fit_new_cmp
     #% modelfit for all cmp
 
