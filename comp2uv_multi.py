@@ -7,7 +7,7 @@ This script will comp the uv multi data
 """
 
 #import fix
-import numpy
+import numpy as np
 import comp2uv
 
 def comp2uv_multi(x_fit_multi,uv_data):
@@ -18,7 +18,7 @@ def comp2uv_multi(x_fit_multi,uv_data):
     for i in range(len(uv_data)):
         uv_re_im_fit_multi.append([0,0])
     #cmp_num = fix.fix(len(x_fit_multi)/6)
-    cmp_num = int(numpy.fix(len(x_fit_multi)/6))
+    cmp_num = int(np.fix(len(x_fit_multi)/6))
 
     x_fit = []
     for i in range(cmp_num):
@@ -36,5 +36,8 @@ def comp2uv_multi(x_fit_multi,uv_data):
 
 #    print 'uv data len is %d' % len(uv_data)
     uv_re_im_fit = comp2uv.comp2uv(x_fit,uv_data)
-    uv_re_im_fit_multi = uv_re_im_fit_multi + uv_re_im_fit
-    return uv_re_im_fit_multi
+#    print type(uv_re_im_fit)
+#    print type(uv_re_im_fit_multi)
+    uv_re_im_fit_multi = np.array(uv_re_im_fit_multi) + np.array(uv_re_im_fit)
+#    print type(uv_re_im_fit_multi)
+    return list(uv_re_im_fit_multi)
