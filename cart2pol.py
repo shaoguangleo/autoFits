@@ -7,9 +7,9 @@ This script will transform cartesian coordinates to polar or cylindrical
 """
 
 import math
-import numpy
+#import numpy as np
 #Transform Cartesian coordinates to polar or cylindrical
 def cart2pol(x,y):
-    r = math.sqrt(x * x + y * y)
-    theta = numpy.arctan(float(x)/float(y))
+    theta = math.atan2(float(y),float(x))
+    r = math.hypot(float(x),float(y))
     return [theta,r]
