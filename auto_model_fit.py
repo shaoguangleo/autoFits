@@ -48,10 +48,11 @@ uv_data = load_uvsel_uv.load_uvsel_uv(uv_filename)
 #Todo will read standard FITS file in the future
 #fits_data = read_fits.read_fits('input/1730-130.u.2009_12_10.icn.fits')
 fits_data = pyfits.open('input/test.fits')
-print fits_data[0].data
+#print fits_data[0].data
 
-aa = fits_data[0].data
-plot_fits.plot_fits(aa[0][0],112)
+if all_class.debug:
+    aa = fits_data[0].data
+    plot_fits.plot_fits(aa[0][0],112)
 
 # Get the uv weight value
 weight_idx = 5
@@ -62,13 +63,17 @@ for i in uv_data:
     if string.atof(i.split(',')[4]) != 0.0 :
         uv_data_non_zero_wt.append(i)
 
+
 # The following actually is not needed
 # We can just put it together with the upline
+# Here for deep copy, will not change when the source modified
 uv_data_select =[]
 for i in uv_data_non_zero_wt:
     uv_data_select.append(i)
 print len(uv_data_select)
-print len(uv_data_select[0])
+print len(uv_data_select[0].split(','))
+print uv_data_select[0].split(',')
+time.sleep(5)
 
 # Read the sin and cos of amp
 uv_re_im_read = [] # The total matrix
@@ -89,10 +94,20 @@ for i in uv_data_select:
     uv_re_im_wt_temp.append(isin*math.sqrt(weight))
     uv_re_im_read_wt.append(uv_re_im_wt_temp)
 
-for i in range(5):
-    print uv_re_im_read[i]
-for i in range(5):
-    print uv_re_im_read_wt[i]
+'''
+print '-'*80
+temp_rst = open('temp_rst.txt','w')
+temp_rst.write(str(uv_re_im_read_wt))
+temp_rst.close()
+print '-'*80
+time.sleep(5)
+'''
+
+if all_class.debug:
+    for i in range(5):
+        print uv_re_im_read[i]
+    for i in range(5):
+        print uv_re_im_read_wt[i]
 
 for cmp_num in range(6):
     x_fit_multi = []
@@ -110,7 +125,9 @@ for cmp_num in range(6):
         icos = amp*math.cos(ang)
         isin = amp*math.sin(ang)
         uv_data_re.append(icos - uv_re_im_fit_multi[i][0])
-        uv_data_im.append(icos - uv_re_im_fit_multi[i][1])
+        uv_data_im.append(isin - uv_re_im_fit_multi[i][1])
+
+
 
     uv_data_phs = []
     uv_data_amp = []
@@ -119,6 +136,14 @@ for cmp_num in range(6):
         temp  = cart2pol.cart2pol(uv_data_re[i],uv_data_im[i])
         uv_data_phs.append(temp[0])
         uv_data_amp.append(temp[1])
+
+# TODO All going well
+    print '-'*80
+    temp_rst = open('temp_rst.txt','w')
+    temp_rst.write(str(uv_data_amp))
+    temp_rst.close()
+    print '-'*80
+    time.sleep(5)
 
     #if debug:
     if all_class.debug:
@@ -293,7 +318,7 @@ for cmp_num in range(6):
 
     fidx = fidx+1
     my_color = [ 1.000,0.314,0.510 ]
-    plot_fits.plot_fits(my_fits,fidx)
+    #plot_fits.plot_fits(my_fits,fidx)
     #my_plot_fits(my_fits,fidx)
     #my_plot_comp_all(x_fit_multi_array,my_units,fidx, my_color);
 
