@@ -9,14 +9,14 @@ This script will comp the uv multi data
 #import fix
 import numpy as np
 import comp2uv
+from cal_col_row import *
 
 def comp2uv_multi(x_fit_multi,uv_data):
     # Calculate the re and im of visibility base on the x_fit_multi&&uv
     # x_fit format [Flux, x0, y0, Major, Minor, Phi(deg)]
     # x_fit format [   1,  2,  3,     4,     5,        6]
-    uv_re_im_fit_multi = []
-    for i in range(len(uv_data)):
-        uv_re_im_fit_multi.append([0,0])
+    row, col = cal_col_row(uv_data)
+    uv_re_im_fit_multi = np.zeros((row,2))
     #cmp_num = fix.fix(len(x_fit_multi)/6)
     cmp_num = int(np.fix(len(x_fit_multi)/6))
 
@@ -38,6 +38,7 @@ def comp2uv_multi(x_fit_multi,uv_data):
     uv_re_im_fit = comp2uv.comp2uv(x_fit,uv_data)
 #    print type(uv_re_im_fit)
 #    print type(uv_re_im_fit_multi)
-    uv_re_im_fit_multi = np.array(uv_re_im_fit_multi) + np.array(uv_re_im_fit)
-#    print type(uv_re_im_fit_multi)
-    return list(uv_re_im_fit_multi)
+    uv_re_im_fit_multi = np.array(uv_re_im_fit_multi) + uv_re_im_fit
+    print uv_re_im_fit_multi[0]
+
+    return uv_re_im_fit_multi

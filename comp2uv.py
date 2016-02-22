@@ -7,6 +7,8 @@ This script will comp the uv data
 """
 
 import math
+import time
+from cal_col_row import *
 
 def comp2uv(x_fit,uv_data):
     # model fit
@@ -38,14 +40,19 @@ def comp2uv(x_fit,uv_data):
 #    print 'uv data len is %d' % len(uv_data)
 #    print type(uv_data)
 #    print uv_data[0]
+    row,col = cal_col_row(uv_data)
+    uv_re_im_fit = np.zeros((row,2))
     #for i in range(uv_data):
-    for i in uv_data:
+    for i in range(len(uv_data)):
         # Pick up the uv info
         #print i
         #uu = uv_data.split(',')[0]
         #vv = uv_data.split(',')[1]
-        uu = float(i.split(',')[0])
-        vv = float(i.split(',')[1])
+        uu = float(uv_data[i].split(',')[0])
+        #print uu
+        vv = float(uv_data[i].split(',')[1])
+        #print vv
+        #time.sleep(5)
 
         # Component phase
         cmpphs = 2 * math.pi * (uu * x0 + vv * y0)
@@ -74,7 +81,18 @@ def comp2uv(x_fit,uv_data):
         cmpre = cmpamp * math.cos(cmpphs)
         cmpim = cmpamp * math.sin(cmpphs)
 
-        uv_re_im_fit = []
-        uv_re_im_fit.append(cmpre)
-        uv_re_im_fit.append(cmpim)
-        return uv_re_im_fit
+        #uv_re_im_fit.append(cmpre)
+        #uv_re_im_fit.append(cmpim)
+        uv_re_im_fit[i][0] = cmpre
+        uv_re_im_fit[i][1] = cmpim
+        #print uv_re_im_fit
+    '''
+    print '-'*80
+    temp_rst = open('temp_rst.txt','w')
+    temp_rst.write(str(uv_re_im_fit))
+    print cal_col_row(uv_re_im_fit)
+    temp_rst.close()
+    print '-'*80
+    time.sleep(5)
+    '''
+    return uv_re_im_fit
