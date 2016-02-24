@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 This script will return uv bin data
-@version:0.9
+@version:1.0
 @contact: sgguo@shao.ac.cn
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
 """
@@ -15,11 +15,11 @@ import numpy as np
 def uv_bin(uv_data,my_units):
     #binwid meaning?
     uvb = all_class.uvb()
-    uvb.utopix =  1.0 / my_units.uinc / my_units.binwid;
-    uvb.vtopix =  1.0 / my_units.vinc / my_units.binwid;
-    uvb.nu=my_units.nx/4;
-    uvb.nv=my_units.nx/2;
-    uvb.nbin=uvb.nu*uvb.nv;
+    uvb.utopix =  1.0 / my_units.uinc / my_units.binwid
+    uvb.vtopix =  1.0 / my_units.vinc / my_units.binwid
+    uvb.nu=my_units.nx/4
+    uvb.nv=my_units.nx/2
+    uvb.nbin=uvb.nu*uvb.nv
 
     uvbin = [0 for row in range(uvb.nbin)]
 
@@ -49,5 +49,14 @@ def uv_bin(uv_data,my_units):
     # uvbin_array = reshape(uvbin,uvb.nu,uvb.nv)';
     uvbin_array = np.reshape(uvbin,(uvb.nu,uvb.nv))
     uvbin_array = np.transpose(uvbin_array)
-
+    '''
+    print '-'*80
+    temp_rst = open('temp_rst.txt','w')
+    temp_rst.write(str(uvbin_array))
+    temp_rst.close()
+    print '-'*80
+    print uvbin_array.shape
+    import time
+    time.sleep(5)
+    '''
     return [uvbin, uvbin_array, uvb]
