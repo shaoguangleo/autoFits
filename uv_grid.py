@@ -51,25 +51,25 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
     wsum = 0
     for i in range(len(uv_data)):
         temp_uv_idx = temp_uv_idx+1
-
-        print i
-        print uv_data[i][weight_idx-1]
+        if all_class.debug:
+            print i
+            print uv_data[i][weight_idx-1]
         #if string.atof(uv_data[i].split(',')[weight_idx-1]) > 0:
         if string.atof(uv_data[i][weight_idx-1]) > 0:
             #uu = string.atof(uv_data[i].split(',')[0])
             #vv = string.atof(uv_data[i].split(',')[1])
             uu = string.atof(uv_data[i][0])
             vv = string.atof(uv_data[i][1])
-            print 'uu && vv'
-            print i
-            print uv_data[0][4]
-            print string.atof(uv_data[0][0])
-            print string.atof(uv_data[0][1])
-            print uu
-            print vv
-            import time
-            time.sleep(5)
-
+            if all_class.debug:
+                print 'uu && vv'
+                print i
+                print uv_data[0][4]
+                print string.atof(uv_data[0][0])
+                print string.atof(uv_data[0][1])
+                print uu
+                print vv
+                import time
+                time.sleep(5)
 
             vis = all_class.vis()
             vis.amp = string.atof(uv_data[i][2]) * scale_xu;
@@ -83,7 +83,13 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
 
             weight = 1
             binpix_matlab = get_uv_bin.get_uv_bin(uvb,uu,vv)
-            bc=uvbin[int(binpix_matlab)-1]
+            if all_class.debug:
+                print 'binpix is',
+                print binpix_matlab
+            #bc=uvbin[int(binpix_matlab)-1]
+            bc=uvbin[int(binpix_matlab)]
+            print 'bc is',
+            print bc
             weight = weight/bc
 
 
