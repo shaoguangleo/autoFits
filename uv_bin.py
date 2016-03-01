@@ -4,6 +4,9 @@ This script will return uv bin data
 @version:1.0
 @contact: sgguo@shao.ac.cn
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
+@output :   uvbin       - list
+            uvbin_array - nbarray
+            uvb         - class
 """
 
 import all_class
