@@ -50,7 +50,8 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
 
     wsum = 0
     for i in range(len(uv_data)):
-        print i
+        if i % 100 == 0:
+            print i
         temp_uv_idx = temp_uv_idx+1
         if all_class.debug:
             print i
@@ -207,37 +208,38 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
     % for j=10:-1:1; figure(100+j);plot(traceData_diff_ratio(1:3:end,j),'.');end
     '''
 
-        #cntr_ptr_vector_array_real = reshape(cntr_ptr_vector(1:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
-        cntr_ptr_vector_array_real = np.reshape(cntr_ptr_vector[0:2*nvgrid*nugrid:2],(nugrid,nvgrid))
-        #print len(cntr_ptr_vector_array_real)
-        cntr_ptr_vector_array_real=np.transpose(cntr_ptr_vector_array_real)
-        #print len(cntr_ptr_vector_array_real)
+    #cntr_ptr_vector_array_real = reshape(cntr_ptr_vector(1:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
+    cntr_ptr_vector_array_real = np.reshape(cntr_ptr_vector[0:2*nvgrid*nugrid:2],(nugrid,nvgrid))
+    #print len(cntr_ptr_vector_array_real)
+    cntr_ptr_vector_array_real=np.transpose(cntr_ptr_vector_array_real)
+    #print len(cntr_ptr_vector_array_real)
 
-        if all_class.debug:
-            print '-'*80
-            temp_rst = open('temp_rst.txt','w')
-            temp_rst.write(str(cntr_ptr_vector))
-            temp_rst.close()
-            print '-'*80
-            import time
-            time.sleep(5)
+    #if all_class.debug:
+    if True:
+        print '-'*80
+        temp_rst = open('temp_rst.txt','w')
+        temp_rst.write(str(cntr_ptr_vector))
+        temp_rst.close()
+        print '-'*80
+        import time
+        time.sleep(5)
 
 
-        #cntr_ptr_vector_array_imag = reshape(cntr_ptr_vector(2:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
-        cntr_ptr_vector_array_imag = np.reshape(cntr_ptr_vector[1:2*nvgrid*nugrid:2],(nugrid,nvgrid))
-        cntr_ptr_vector_array_imag = np.transpose(cntr_ptr_vector_array_imag)
+    #cntr_ptr_vector_array_imag = reshape(cntr_ptr_vector(2:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
+    cntr_ptr_vector_array_imag = np.reshape(cntr_ptr_vector[1:2*nvgrid*nugrid:2],(nugrid,nvgrid))
+    cntr_ptr_vector_array_imag = np.transpose(cntr_ptr_vector_array_imag)
 
-        #cntr_ptr_vector_array = cntr_ptr_vector_array_real + 1j.*cntr_ptr_vector_array_imag;
-        cntr_ptr_vector_array = np.zeros([nvgrid,nugrid],complex)
-        if all_class.debug:
-            print 'size'
-            print np.size(cntr_ptr_vector_array_real)
-            print 'length'
-            print len(cntr_ptr_vector_array_real)
-            print len(cntr_ptr_vector_array_real[0])
-            print 'nugrid and nvgrid'
-            print nvgrid
-            print nugrid
+    #cntr_ptr_vector_array = cntr_ptr_vector_array_real + 1j.*cntr_ptr_vector_array_imag;
+    cntr_ptr_vector_array = np.zeros([nvgrid,nugrid],complex)
+    if all_class.debug:
+        print 'size'
+        print np.size(cntr_ptr_vector_array_real)
+        print 'length'
+        print len(cntr_ptr_vector_array_real)
+        print len(cntr_ptr_vector_array_real[0])
+        print 'nugrid and nvgrid'
+        print nvgrid
+        print nugrid
     #print len(cntr_ptr_vector_array_imag[0])
     for i in range(nvgrid):
         for j in range(nugrid):
