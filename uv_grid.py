@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 This script will return uv grid information
-@version:0.9
+@version:0.99
 @contact: sgguo@shao.ac.cn
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
 """
@@ -50,8 +50,6 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
 
     wsum = 0
     for i in range(len(uv_data)):
-        if i % 100 == 0:
-            print i
         temp_uv_idx = temp_uv_idx+1
         if all_class.debug:
             print i
@@ -115,11 +113,6 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
                 print vfrc
                 print upix
                 print vpix
-            #TODO NOW GO HERE BY GUO
-            #print '-' * 80
-            #print '-'*80
-            #import time
-            #time.sleep(5)
 
             #% * Loop through the interpolation area.
             for iv in range(int(vpix-nmask),int(vpix+nmask+1)):
@@ -207,6 +200,8 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
     % for j=10:-1:1; figure(j);plot(traceData_diff(1:3:end,j),'.');end
     % for j=10:-1:1; figure(100+j);plot(traceData_diff_ratio(1:3:end,j),'.');end
     '''
+    #Here we read the result of cntr_ptr_vector
+    cntr_ptr_vector = np.genfromtxt('uvgrid.txt')
 
     #cntr_ptr_vector_array_real = reshape(cntr_ptr_vector(1:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
     cntr_ptr_vector_array_real = np.reshape(cntr_ptr_vector[0:2*nvgrid*nugrid:2],(nugrid,nvgrid))
@@ -214,15 +209,19 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
     cntr_ptr_vector_array_real=np.transpose(cntr_ptr_vector_array_real)
     #print len(cntr_ptr_vector_array_real)
 
-    #if all_class.debug:
-    if True:
-        print '-'*80
+    #TODO The value of cntr_ptr_vector seem different
+    #So we will read value from file first
+    if all_class.debug:
+        print '*'*80
         temp_rst = open('temp_rst.txt','w')
-        temp_rst.write(str(cntr_ptr_vector))
+        len_vector = cntr_ptr_vector.size
+        for i in range(len_vector):
+            temp_rst.write(str(cntr_ptr_vector[i]))
         temp_rst.close()
         print '-'*80
         import time
         time.sleep(5)
+
 
 
     #cntr_ptr_vector_array_imag = reshape(cntr_ptr_vector(2:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
@@ -241,10 +240,22 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
         print nvgrid
         print nugrid
     #print len(cntr_ptr_vector_array_imag[0])
+
     for i in range(nvgrid):
         for j in range(nugrid):
             #cntr_ptr_vector_array[i].append(complex(cntr_ptr_vector_array_real[i][j],cntr_ptr_vector_array_imag[i][j]))
             cntr_ptr_vector_array[i][j] = complex(cntr_ptr_vector_array_real[i][j],cntr_ptr_vector_array_imag[i][j])
+    #cntr_ptr_vector_array = complex(cntr_ptr_vector_array_real,cntr_ptr_vector_array_imag)
+    # Error, cause will generate double complex
+    #cntr_ptr_vector_array = np.array([cntr_ptr_vector_array_real,cntr_ptr_vector_array_imag],dtype=complex)
 
+    if all_class.debug:
+        for i in range(5):
+            print 'real and image is '
+            print cntr_ptr_vector_array_real[i][0],
+            print cntr_ptr_vector_array_imag[i][0]
+            print cntr_ptr_vector_array.size
+            print cntr_ptr_vector_array[0].size
+            print cntr_ptr_vector_array[0][0]
 
     return [cntr_ptr_vector,cntr_ptr_vector_array]
