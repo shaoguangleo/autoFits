@@ -50,6 +50,7 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
 
     wsum = 0
     for i in range(len(uv_data)):
+        print i
         temp_uv_idx = temp_uv_idx+1
         if all_class.debug:
             print i
@@ -83,13 +84,13 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
 
             weight = 1
             binpix_matlab = get_uv_bin.get_uv_bin(uvb,uu,vv)
+            #bc=uvbin[int(binpix_matlab)-1]
+            bc=uvbin[int(binpix_matlab)]
             if all_class.debug:
                 print 'binpix is',
                 print binpix_matlab
-            #bc=uvbin[int(binpix_matlab)-1]
-            bc=uvbin[int(binpix_matlab)]
-            print 'bc is',
-            print bc
+                print 'bc is',
+                print bc
             weight = weight/bc
 
 
@@ -99,13 +100,25 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
             else:
                 uvrval = 1.0
                 uvival = 0.0
-
-
+            if all_class.debug:
+                print domap
+                print uvrval
+                print uvival
 
             ufrc = uu / my_units.uinc   # /* Decimal pixel position */
             vfrc = vv / my_units.vinc
             upix = round(ufrc)          # Integer pixel position */
             vpix = round(vfrc)
+            if all_class.debug:
+                print ufrc
+                print vfrc
+                print upix
+                print vpix
+            #TODO NOW GO HERE BY GUO
+            #print '-' * 80
+            #print '-'*80
+            #import time
+            #time.sleep(5)
 
             #% * Loop through the interpolation area.
             for iv in range(int(vpix-nmask),int(vpix+nmask+1)):
@@ -196,9 +209,18 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
 
         #cntr_ptr_vector_array_real = reshape(cntr_ptr_vector(1:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
         cntr_ptr_vector_array_real = np.reshape(cntr_ptr_vector[0:2*nvgrid*nugrid:2],(nugrid,nvgrid))
-        print len(cntr_ptr_vector_array_real)
+        #print len(cntr_ptr_vector_array_real)
         cntr_ptr_vector_array_real=np.transpose(cntr_ptr_vector_array_real)
-        print len(cntr_ptr_vector_array_real)
+        #print len(cntr_ptr_vector_array_real)
+
+        if all_class.debug:
+            print '-'*80
+            temp_rst = open('temp_rst.txt','w')
+            temp_rst.write(str(cntr_ptr_vector))
+            temp_rst.close()
+            print '-'*80
+            import time
+            time.sleep(5)
 
 
         #cntr_ptr_vector_array_imag = reshape(cntr_ptr_vector(2:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
