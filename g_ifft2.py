@@ -11,6 +11,16 @@ import fft_shift
 import all_class
 
 def g_ifft2(cntr_ptr_vector_array):
+    '''
+    This function will return the input's fft
+
+    Args:
+        cntr_ptr_vector_array: nparray
+
+    Returns:
+        nparray
+
+    '''
     total_len = np.size(cntr_ptr_vector_array)
     total_row = len(cntr_ptr_vector_array)
     total_column = total_len / total_row
