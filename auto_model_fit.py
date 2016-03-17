@@ -19,6 +19,7 @@ import map_size
 import all_class
 import maplot
 #import scipy.ndimage.filters as filters
+import scipy.signal as sgnl
 import guass
 import matplotlib.pyplot as plt
 #import find_peaks
@@ -38,6 +39,7 @@ fits_filename ='./input/1730-130.u.2009_12_10.icn.fits'
 
 #debug = 1 # if debug equal 1, will print verbose informations.
 trace = 1
+fidx = 100
 
 # Loading the visibility data
 uv_data = []
@@ -73,7 +75,7 @@ for i in uv_data_non_zero_wt:
 print len(uv_data_select)
 print len(uv_data_select[0].split(','))
 print uv_data_select[0].split(',')
-time.sleep(5)
+#time.sleep(5)
 
 # Read the sin and cos of amp
 uv_re_im_read = [] # The total matrix
@@ -137,14 +139,11 @@ for cmp_num in range(6):
         uv_data_phs.append(temp[0])
         uv_data_amp.append(temp[1])
 
-# TODO All going well
-    print '-'*80
-    temp_rst = open('temp_rst.txt','w')
-    temp_rst.write(str(uv_data_amp))
-    temp_rst.close()
-    print '-'*80
-    time.sleep(5)
 
+    if all_class.debug:
+        print type(uv_data_select)
+        print type(uv_data_phs)
+        print type(uv_data_amp)
     #if debug:
     if all_class.debug:
         print len(uv_data_phs)
@@ -166,6 +165,7 @@ for cmp_num in range(6):
            uv_data_residual[i].insert(j,uv_data_select[i].split(',')[j])
         uv_data_residual[i][2] = uv_data_amp[i]
         uv_data_residual[i][3] = uv_data_phs[i]
+
     if all_class.debug:
         print '*'*40
         print uv_data_residual[0]
@@ -177,14 +177,32 @@ for cmp_num in range(6):
     domap = 1
     my_units = all_class.units()
     my_units = map_size.map_size(nx,xinmap)
-    print my_units.xinc
 
-    all_class.print_debug()
-    #########
-    #TTTTTToooDO
+    if all_class.debug:
+        print 'The following is my units information'
+        print my_units.nx
+        print my_units.ny
+        print my_units.xinc
+        print my_units.yinc
+        print my_units.uinc
+        print my_units.vinc
+        print my_units.u_limit
+        print my_units.v_limit
+        print my_units.xinmap
+        print my_units.yinmap
+        print my_units.binwid
+
+
     map_org = maplot.maplot(uv_data_residual,my_units,domap)
+    # TODO All going well
+    print '<-----  HERE  ----->'
+    print '-'*80
+    temp_rst = open('temp_rst.txt','w')
+    temp_rst.write(str(map_org))
+    temp_rst.close()
+    print '-'*80
+    time.sleep(5)
 
-    all_class.print_debug()
     #Setting the filtering intensity based on the beam
     map_re = np.real(map_org)
 
@@ -201,19 +219,22 @@ for cmp_num in range(6):
         print '-'*80
 
 
-    map_filt = np.convolve(map_re,filt,'same')
-    map_positive = map_filt - min(map_filt)
-    map_normal = map_positive/max(map_positive)
+    #map_filt = np.convolve(map_re,filt,'same')
+    map_filt = sgnl.convolve2d(map_re,filt,'same')
+    #map_positive = map_filt - min(map_filt)
+    map_positive = map_filt - map_filt.min()
+    #map_normal = map_positive/max(map_positive)
+    map_normal = map_positive/map_positive.max()
     my_map = map_normal
 
     if trace ==1:
         fidx=fidx+1
         plt.figure(fidx)
-        plt.imshow(my_map/max(my_map))
+        plt.imshow(my_map/my_map.max())
         plt.title('maplot(), map image')
 
 
-#    [peakInf_node_isLeaf_sort_am,peakInf_node_isLeaf_sort_energy_sum,peakInf_node_isLeaf,peakInf_node_all] =find_peaks.find_peaks(my_map)
+    [peakInf_node_isLeaf_sort_am,peakInf_node_isLeaf_sort_energy_sum,peakInf_node_isLeaf,peakInf_node_all] =find_peaks.find_peaks(my_map)
 
     #
     # Found the highest point in the image
