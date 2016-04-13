@@ -202,6 +202,8 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
     '''
     #Here we read the result of cntr_ptr_vector
     cntr_ptr_vector = np.genfromtxt('uvgrid.txt')
+    print 'cntr_ptr_vector is '
+    print cntr_ptr_vector
 
     #cntr_ptr_vector_array_real = reshape(cntr_ptr_vector(1:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
     cntr_ptr_vector_array_real = np.reshape(cntr_ptr_vector[0:2*nvgrid*nugrid:2],(nugrid,nvgrid))
@@ -214,15 +216,13 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
     if all_class.debug:
         print '*'*80
         temp_rst = open('temp_rst.txt','w')
-        len_vector = cntr_ptr_vector.size
+        len_vector = cntr_ptr_vector_array_real.size
         for i in range(len_vector):
-            temp_rst.write(str(cntr_ptr_vector[i]))
+            temp_rst.write(str(cntr_ptr_vector_array_real[i]))
         temp_rst.close()
         print '-'*80
         import time
         time.sleep(5)
-
-
 
     #cntr_ptr_vector_array_imag = reshape(cntr_ptr_vector(2:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
     cntr_ptr_vector_array_imag = np.reshape(cntr_ptr_vector[1:2*nvgrid*nugrid:2],(nugrid,nvgrid))
@@ -230,6 +230,7 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
 
     #cntr_ptr_vector_array = cntr_ptr_vector_array_real + 1j.*cntr_ptr_vector_array_imag;
     cntr_ptr_vector_array = np.zeros([nvgrid,nugrid],complex)
+    #cntr_ptr_vector_array = np.zeros([nugrid,nvgrid],complex)
     if all_class.debug:
         print 'size'
         print np.size(cntr_ptr_vector_array_real)
@@ -237,14 +238,15 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
         print len(cntr_ptr_vector_array_real)
         print len(cntr_ptr_vector_array_real[0])
         print 'nugrid and nvgrid'
-        print nvgrid
         print nugrid
+        print nvgrid
     #print len(cntr_ptr_vector_array_imag[0])
 
     for i in range(nvgrid):
         for j in range(nugrid):
             #cntr_ptr_vector_array[i].append(complex(cntr_ptr_vector_array_real[i][j],cntr_ptr_vector_array_imag[i][j]))
             cntr_ptr_vector_array[i][j] = complex(cntr_ptr_vector_array_real[i][j],cntr_ptr_vector_array_imag[i][j])
+#            cntr_ptr_vector_array[i][j] = np.complex(cntr_ptr_vector_array_real[i][j],cntr_ptr_vector_array_imag[i][j])
     #cntr_ptr_vector_array = complex(cntr_ptr_vector_array_real,cntr_ptr_vector_array_imag)
     # Error, cause will generate double complex
     #cntr_ptr_vector_array = np.array([cntr_ptr_vector_array_real,cntr_ptr_vector_array_imag],dtype=complex)
@@ -257,5 +259,8 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
             print cntr_ptr_vector_array.size
             print cntr_ptr_vector_array[0].size
             print cntr_ptr_vector_array[0][0]
-
+    print '*'*80
+    #print cntr_ptr_vector
+    print np.transpose(cntr_ptr_vector_array)
+    print '*'*80
     return [cntr_ptr_vector,cntr_ptr_vector_array]

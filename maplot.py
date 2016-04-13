@@ -79,14 +79,20 @@ def maplot(uvData, my_units, domap):
 
     #ifft
     uvbin_array_conj_shift2_ifft2 = g_ifft2.g_ifft2(cntr_ptr_vector_array)
+    #print cntr_ptr_vector_array
+    #print uvbin_array_conj_shift2_ifft2.max()
+    #print 'The max'
+    #print cntr_ptr_vector_array.max()
 
     #TODO the image is different with Matlab
-    if trace ==0:
+    #if trace ==0:
+    if trace ==1:
         fidx=fidx+1
         plt.figure(fidx)
         #plt.imshow(uvbin_array_conj_shift2_ifft2./max(uvbin_array_conj_shift2_ifft2(:)))
         #plt.imshow(uvbin_array_conj_shift2_ifft2)
         plt.imshow(uvbin_array_conj_shift2_ifft2/uvbin_array_conj_shift2_ifft2.max())
+        #plt.imshow(uvbin_array_conj_shift2_ifft2/(3819.1 + 0.51204j))
         plt.title('uvdata ifft')
         #plt.show()
 
@@ -96,6 +102,11 @@ def maplot(uvData, my_units, domap):
     ryft_length = len(ryft)
     scale_x = rxft_length/my_units.nx
     scale_y = ryft_length/my_units.ny
+    if all_class.debug:
+        print rxft_length
+        print ryft_length
+        print scale_x
+        print scale_y
 
     uvbin_array_conj_shift2_ifft2_rft = [[0 for row in range(my_units.ny)] for col in range(my_units.nx)]
 
@@ -114,4 +125,5 @@ def maplot(uvData, my_units, domap):
         plt.show()
     # Make sure the image pixel is not complex, if it is complex means program have error
     # uvbin_array_conj_shift2_ifft2_rft_abs = abs(uvbin_array_conj_shift2_ifft2_rft);
+    # print np.array(uvbin_array_conj_shift2_ifft2_rft)
     return np.array(uvbin_array_conj_shift2_ifft2_rft)
