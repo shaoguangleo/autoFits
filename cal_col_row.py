@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 This script will comp the uv multi data
-@version:0.9
+@version:1.0
 @contact: sgguo@shao.ac.cn
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
 """
