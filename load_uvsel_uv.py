@@ -13,7 +13,7 @@ def load_uvsel_uv(uv_filename):
     # uv data parameters:
     # uu , vv, amp, phs, wt, uvscale, cif, isub, base, ut
     # 1  ,  2,   3,   4,  5,       6,   7,    8,    9, 10
-    print 'Now loading uv file...'
+    print '> Now loading uv file...'
 
     fid = open(uv_filename)
     content = fid.readlines()
