@@ -7,6 +7,7 @@ This script will load uv sel uv
 """
 import time
 import all_class
+import sys
 
 def load_uvsel_uv(uv_filename):
     # Pick up the data info
@@ -23,6 +24,7 @@ def load_uvsel_uv(uv_filename):
     uv_data = [[0 for i in range(10)] for j in range(len(content))]
     #for i in range(len(content)):
     for i,c in enumerate(content):
+        sys.stdout.write('                          %.2f%%\r' %(i*100.0/len(content)))
         for j in range(10):
             uv_data[i][j] = float(c.split('=')[1].strip().split(',')[j])
         # This is the data info
@@ -30,7 +32,7 @@ def load_uvsel_uv(uv_filename):
         #uv_data.append(i.split('=')[1].split(',')[0])
         # This is the describe info
         # uv_data.append(content(i).split('=')[0])
-
+    print '\n'
     if all_class.debug:
         print uv_data
     return uv_data
