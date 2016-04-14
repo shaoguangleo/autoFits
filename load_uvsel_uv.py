@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 """
 This script will load uv sel uv
-@version:0.9
+@version:1.0
 @contact: sgguo@shao.ac.cn
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
 """
+import time
+import all_class
 
 def load_uvsel_uv(uv_filename):
     # Pick up the data info
@@ -15,14 +17,17 @@ def load_uvsel_uv(uv_filename):
 
     fid = open(uv_filename)
     content = fid.readlines()
+    fid.close()
 
     uv_data = []
     #for i in range(len(content)):
     for i in content:
         # This is the data info
         # uv_data.append(content(i).split('=')[1])
-        uv_data.append(i.split('=')[1])
+        uv_data.append(i.split('=')[1].split(',')[0])
         # This is the describe info
         # uv_data.append(content(i).split('=')[0])
 
+    if all_class.debug:
+        print uv_data
     return uv_data
