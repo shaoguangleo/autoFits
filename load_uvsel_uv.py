@@ -20,11 +20,14 @@ def load_uvsel_uv(uv_filename):
     fid.close()
 
     uv_data = []
+    uv_data = [[0 for i in range(10)] for j in range(len(content))]
     #for i in range(len(content)):
-    for i in content:
+    for i,c in enumerate(content):
+        for j in range(10):
+            uv_data[i][j] = float(c.split('=')[1].strip().split(',')[j])
         # This is the data info
         # uv_data.append(content(i).split('=')[1])
-        uv_data.append(i.split('=')[1].split(',')[0])
+        #uv_data.append(i.split('=')[1].split(',')[0])
         # This is the describe info
         # uv_data.append(content(i).split('=')[0])
 
