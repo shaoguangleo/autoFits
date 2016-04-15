@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 This script include all the class units need for the program
-@version:0.9
+@version:0.91
 @contact: sgguo@shao.ac.cn
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
 """
@@ -25,7 +25,7 @@ class uvb:
     def __init__(self):
         self.utopix = 1e-6
         self.vtopix = 1e-6
-        self.nu = 512
+        self.nu = 256
         self.nv = 512
         self.nbin = 262144
 
