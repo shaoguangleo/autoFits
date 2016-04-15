@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 This script will comp the uv data
-@version:0.9
+@version:1.0
 @contact: sgguo@shao.ac.cn
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
 """
@@ -25,7 +25,7 @@ def comp2uv(x_fit,uv_data):
     major= 0.0
     ratio= 0.0
     phi  = 0.0
-    if len(x_fit) == 6 :
+    if len(x_fit) == 6:
         flux = x_fit[0]
         x0   = x_fit[1]
         y0   = x_fit[2]
@@ -43,14 +43,16 @@ def comp2uv(x_fit,uv_data):
     row,col = cal_col_row(uv_data)
     uv_re_im_fit = np.zeros((row,2))
     #for i in range(uv_data):
-    for i in range(len(uv_data)):
+    for i,c in enumerate(uv_data):
         # Pick up the uv info
         #print i
         #uu = uv_data.split(',')[0]
         #vv = uv_data.split(',')[1]
-        uu = float(uv_data[i].split(',')[0])
+        #uu = float(uv_data[i].split(',')[0])
+        uu = c[0]
         #print uu
-        vv = float(uv_data[i].split(',')[1])
+        #vv = float(uv_data[i].split(',')[1])
+        vv = c[1]
         #print vv
         #time.sleep(5)
 

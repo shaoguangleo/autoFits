@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 This script will comp the uv multi data
-@version:0.9
+@version:1.0
 @contact: sgguo@shao.ac.cn
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
 """
@@ -25,6 +25,10 @@ def comp2uv_multi(x_fit_multi,uv_data):
         delta = i * 6
         for j in range(6):
             x_fit.append(x_fit_multi(delta+j))
+        #print 'HHHHH'
+        print x_fit
+        #import time
+        #time.sleep(4)
         # Here 0 means flux info, 3 means Major, 4 means Phi
         x_fit[3] = abs(x_fit[3])
         x_fit[0] = abs(x_fit[0])
@@ -39,6 +43,6 @@ def comp2uv_multi(x_fit_multi,uv_data):
 #    print type(uv_re_im_fit)
 #    print type(uv_re_im_fit_multi)
     uv_re_im_fit_multi = np.array(uv_re_im_fit_multi) + uv_re_im_fit
-    print uv_re_im_fit_multi[0]
+    #print uv_re_im_fit_multi[0]
 
     return uv_re_im_fit_multi
