@@ -61,7 +61,7 @@ def uv_bin(uv_data,my_units):
     #plt.show()
 
     # uvbin_array = reshape(uvbin,uvb.nu,uvb.nv)';
-    uvbin_array = np.reshape(uvbin,(uvb.nu,uvb.nv))
-    uvbin_array = np.transpose(uvbin_array)
+    uvbin_array = np.reshape(np.array(uvbin),(uvb.nv,uvb.nu))
+    #uvbin_array = np.transpose(uvbin_array)
 
     return [uvbin, uvbin_array, uvb]
