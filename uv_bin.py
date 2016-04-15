@@ -25,14 +25,20 @@ def uv_bin(uv_data,my_units):
     uvb.nbin=uvb.nu*uvb.nv
 
     uvbin = [0 for row in range(uvb.nbin)]
+    #import cal_col_row
+    #row,col = cal_col_row.cal_col_row(uvbin)
+    #uvbin = np.reshape(uvbin,(col,row))
 
-    for i in range(len(uv_data)):
+    for i,c in enumerate(uv_data):
         #uu = string.atof(uv_data[i].split(',')[0])
         #vv = string.atof(uv_data[i].split(',')[1])
-        uu = string.atof(uv_data[i][0])
-        vv = string.atof(uv_data[i][1])
+        #uu = string.atof(uv_data[i][0])
+        uu = c[0]
+        #vv = string.atof(uv_data[i][1])
+        vv = c[1]
         #if string.atof(uv_data[i].split(',')[4]) > 0:
-        if string.atof(uv_data[i][4]) > 0:
+        #if string.atof(uv_data[i][4]) > 0:
+        if c[4] > 0:
             binpix = get_uv_bin(uvb,uu,vv)
             uvbin[int(binpix)] = uvbin[int(binpix)] +1;
 
@@ -47,19 +53,15 @@ def uv_bin(uv_data,my_units):
     # or for natural weighting.
     # bc = get_uv_bin(uvb, 0.0f, 0.0f);
     binpix = get_uv_bin(uvb,0.0,0.0)
+
     uvbin[int(binpix)] = uvbin[int(binpix)] +1
+    #import matplotlib.pyplot as plt
+    #plt.plot(uvbin)
+    #plt.title('UVBIN')
+    #plt.show()
 
     # uvbin_array = reshape(uvbin,uvb.nu,uvb.nv)';
     uvbin_array = np.reshape(uvbin,(uvb.nu,uvb.nv))
     uvbin_array = np.transpose(uvbin_array)
-    '''
-    print '-'*80
-    temp_rst = open('temp_rst.txt','w')
-    temp_rst.write(str(uvbin_array))
-    temp_rst.close()
-    print '-'*80
-    print uvbin_array.shape
-    import time
-    time.sleep(5)
-    '''
+
     return [uvbin, uvbin_array, uvb]
