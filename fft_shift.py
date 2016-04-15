@@ -34,8 +34,8 @@ def fft_shift_x(data_input):
     ny,nx = data_input.shape
     data_shift_x = [[0 for col in range(nx)] for row in range(ny)]
 
-    data_shift_x[:][0:nx/2] = data_input[:][nx/2:nx]
-    data_shift_x[:][nx/2:nx] = data_input[:][0:nx/2]
+    data_shift_x[:][0:nx/2-1] = data_input[:][nx/2:nx-1]
+    data_shift_x[:][nx/2:nx-1] = data_input[:][0:nx/2-1]
 
     return  np.array(data_shift_x)
 
@@ -49,7 +49,7 @@ def fft_shift_y(data_input):
     nx,ny = data_input.shape
     data_shift_y = [[0 for col in range(ny)] for row in range(nx)]
 
-    data_shift_y[:][0:nx/2] = data_input[nx/2:nx][:]
-    data_shift_y[:][nx/2:nx] = data_input[0:nx/2][:]
+    data_shift_y[0:ny/2-1][:] = data_input[ny/2:ny-1][:]
+    data_shift_y[ny/2:ny-1][:] = data_input[0:ny/2-1][:]
 
     return  np.array(data_shift_y)
