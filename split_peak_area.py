@@ -18,6 +18,7 @@ def peakInf_split_func(my_map_area,peakInf_leaf_current,contour_bin, area_pix_su
     peakInf_split = []
     peakInf_split.append(peakInf_leaf_current)
     am_sort = []
+    peakInf_split_temp = {}
 
     area = peakInf_leaf_current['area']
     area_pix_sum = area.sum()
@@ -56,9 +57,10 @@ def peakInf_split_func(my_map_area,peakInf_leaf_current,contour_bin, area_pix_su
                                 r, c = i, j
                     #[r c] = find(my_map_area_temp == am);
                     #r,c = 857,354
-                    peakInf_split['centerPos'] = [r,c]
-                    peakInf_split['am'] = my_map_area_temp[r][c]
-                    peakInf_split['area'] = area
+                    peakInf_split_temp['centerPos'] = [r,c]
+                    peakInf_split_temp['am'] = my_map_area_temp[r][c]
+                    peakInf_split_temp['area'] = area
+                    peakInf_split.append(peakInf_split_temp)
 
                     am_sort[peakIdx] = am
 
