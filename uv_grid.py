@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 This script will return uv grid information
-@version:0.99
+@version:1.0
 @contact: sgguo@shao.ac.cn
 @author:{Guo Shaoguang<mailto:sgguo@shao.ac.cn>}
 """
@@ -45,8 +45,8 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
     # for debug
     scale_xu = 1000000
     temp_uv_idx=0
-    testline = 100
-    traceData_matlab=[]
+    #testline = 100
+    #traceData_matlab=[]
 
     wsum = 0
     for i in range(len(uv_data)):
@@ -55,28 +55,26 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
             print i
             print uv_data[i][weight_idx-1]
         #if string.atof(uv_data[i].split(',')[weight_idx-1]) > 0:
-        if string.atof(uv_data[i][weight_idx-1]) > 0:
+        if (uv_data[i][weight_idx-1]) > 0:
             #uu = string.atof(uv_data[i].split(',')[0])
             #vv = string.atof(uv_data[i].split(',')[1])
-            uu = string.atof(uv_data[i][0])
-            vv = string.atof(uv_data[i][1])
+            uu = uv_data[i][0]
+            vv = uv_data[i][1]
             if all_class.debug:
                 print 'uu && vv'
                 print i
-                print uv_data[0][4]
-                print string.atof(uv_data[0][0])
-                print string.atof(uv_data[0][1])
+                print uv_data[0]
                 print uu
                 print vv
                 import time
                 time.sleep(5)
 
             vis = all_class.vis()
-            vis.amp = string.atof(uv_data[i][2]) * scale_xu;
-            vis.phs = string.atof(uv_data[i][3])
+            vis.amp = (uv_data[i][2]) * scale_xu
+            vis.phs = (uv_data[i][3])
             if modamp_idx > 0 and modphs_idx >0 :
-                vis.modamp = string.atof(uv_data[i][modamp_idx-1]) * scale_xu
-                vis.modphs = string.atof(uv_data[i][modphs_idx-1])
+                vis.modamp = (uv_data[i][modamp_idx-1]) * scale_xu
+                vis.modphs = (uv_data[i][modphs_idx-1])
             else:
                 vis.modamp = 0
                 vis.modphs = 0
@@ -90,12 +88,12 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
                 print binpix_matlab
                 print 'bc is',
                 print bc
-            weight = weight/bc
+            weight = weight*1.0/bc
 
 
             if domap:
-                uvrval = vis.amp * np.cos(vis.phs) - vis.modamp * np.cos(vis.modphs);
-                uvival = vis.amp * np.sin(vis.phs) - vis.modamp * np.sin(vis.modphs);
+                uvrval = vis.amp * np.cos(vis.phs) - vis.modamp * np.cos(vis.modphs)
+                uvival = vis.amp * np.sin(vis.phs) - vis.modamp * np.sin(vis.modphs)
             else:
                 uvrval = 1.0
                 uvival = 0.0
@@ -117,7 +115,7 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
             #% * Loop through the interpolation area.
             for iv in range(int(vpix-nmask),int(vpix+nmask+1)):
             #% * Determine the value of the interpolation function along V at this pixel.
-                distance_v = round(tgtocg*abs(iv-vfrc));
+                distance_v = round(tgtocg*abs(iv-vfrc))
                 fv = weight * convfn[int(distance_v)]
 
                 #%  * Determine the increment in floats to move from v=N/2 to v=vpix+iv.
@@ -201,9 +199,9 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
     % for j=10:-1:1; figure(100+j);plot(traceData_diff_ratio(1:3:end,j),'.');end
     '''
     #Here we read the result of cntr_ptr_vector
-    cntr_ptr_vector = np.genfromtxt('uvgrid.txt')
-    print 'cntr_ptr_vector is '
-    print cntr_ptr_vector
+    #cntr_ptr_vector = np.genfromtxt('uvgrid.txt')
+    #print 'cntr_ptr_vector is '
+    #print cntr_ptr_vector
 
     #cntr_ptr_vector_array_real = reshape(cntr_ptr_vector(1:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
     cntr_ptr_vector_array_real = np.reshape(cntr_ptr_vector[0:2*nvgrid*nugrid:2],(nugrid,nvgrid))
@@ -212,21 +210,18 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
     #print len(cntr_ptr_vector_array_real)
 
     #TODO The value of cntr_ptr_vector seem different
+    # The reason is when read data from txt file ,the textscan in Matlab will lose data precision
     #So we will read value from file first
-    if all_class.debug:
-        print '*'*80
-        temp_rst = open('temp_rst.txt','w')
-        len_vector = cntr_ptr_vector_array_real.size
-        for i in range(len_vector):
-            temp_rst.write(str(cntr_ptr_vector_array_real[i]))
-        temp_rst.close()
-        print '-'*80
-        import time
-        time.sleep(5)
-
     #cntr_ptr_vector_array_imag = reshape(cntr_ptr_vector(2:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
     cntr_ptr_vector_array_imag = np.reshape(cntr_ptr_vector[1:2*nvgrid*nugrid:2],(nugrid,nvgrid))
     cntr_ptr_vector_array_imag = np.transpose(cntr_ptr_vector_array_imag)
+    import matplotlib.pyplot as plt
+    plt.figure()
+    plt.contour(cntr_ptr_vector_array_real)
+    plt.savefig('real_part.png')
+    plt.figure()
+    plt.contour(cntr_ptr_vector_array_imag)
+    plt.savefig('image_part.png')
 
     #cntr_ptr_vector_array = cntr_ptr_vector_array_real + 1j.*cntr_ptr_vector_array_imag;
     cntr_ptr_vector_array = np.zeros([nvgrid,nugrid],complex)
@@ -259,8 +254,12 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
             print cntr_ptr_vector_array.size
             print cntr_ptr_vector_array[0].size
             print cntr_ptr_vector_array[0][0]
-    print '*'*80
-    #print cntr_ptr_vector
-    print np.transpose(cntr_ptr_vector_array)
-    print '*'*80
+        #print '*'*80
+        #print cntr_ptr_vector
+        #print np.transpose(cntr_ptr_vector_array)
+        #print '*'*80
+        print 'NOW'
+        print len(cntr_ptr_vector)
+        print (cntr_ptr_vector[0])
+        print cntr_ptr_vector_array[0]
     return [cntr_ptr_vector,cntr_ptr_vector_array]
