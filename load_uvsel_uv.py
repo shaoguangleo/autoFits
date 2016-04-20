@@ -20,13 +20,16 @@ def load_uvsel_uv(uv_filename):
     content = fid.readlines()
     fid.close()
 
-    uv_data = []
+    #uv_data = []
     uv_data = [[0 for i in range(10)] for j in range(len(content))]
     #for i in range(len(content)):
     for i,c in enumerate(content):
         sys.stdout.write('                          %.2f%%\r' %(i*100.0/len(content)))
         for j in range(10):
-            uv_data[i][j] = float(c.split('=')[1].strip().split(',')[j])
+            #uv_data[i][j] = float(c.split('=')[1].strip().split(',')[j])
+            uv_data[i][j] = float(c.split(',')[j])
+            if j > 5 and j < 10:
+                uv_data[i][j] = int(uv_data[i][j])
         # This is the data info
         # uv_data.append(content(i).split('=')[1])
         #uv_data.append(i.split('=')[1].split(',')[0])
