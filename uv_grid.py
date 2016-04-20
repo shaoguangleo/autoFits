@@ -142,6 +142,11 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
                     distance_u = round(tgtocg*abs(iu-ufrc))
                     fu = convfn[int(distance_u)]
                     fuv = fu*fv
+                    if all_class.debug:
+                        print distance_u
+                        print 'fu and fv'
+                        print fu
+                        print fv
                     wsum = wsum+fuv
                     #% wsum += (fuv = fv * convfn[(int) (tgtocg*fabs(iu-ufrc)+0.5f)]);
 
@@ -149,6 +154,13 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
                     #% * and weighted UV data value.
                     rval = uvrval*fuv
                     ival = uvival*fuv
+                    if all_class.debug:
+                        print 'rval and ival'
+                        print rval
+                        print ival
+                        print uvrval
+                        print uvival
+                        print fuv
                     #% * Pixel iu,iv may be inside the array or in the non-existent
                     #% * conjugate other half of the array. If it is in the latter
                     #% * then we should put it at its conjugate symmetric position in
@@ -204,17 +216,18 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
     #print cntr_ptr_vector
 
     #cntr_ptr_vector_array_real = reshape(cntr_ptr_vector(1:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
-    cntr_ptr_vector_array_real = np.reshape(cntr_ptr_vector[0:2*nvgrid*nugrid:2],(nugrid,nvgrid))
+    #cntr_ptr_vector_array_real = np.reshape(cntr_ptr_vector[0:2*nvgrid*nugrid:2],(nugrid,nvgrid))
+    cntr_ptr_vector_array_real = np.reshape(cntr_ptr_vector[0:2*nvgrid*nugrid:2],(nvgrid,nugrid))
     #print len(cntr_ptr_vector_array_real)
-    cntr_ptr_vector_array_real=np.transpose(cntr_ptr_vector_array_real)
+    #cntr_ptr_vector_array_real=np.transpose(cntr_ptr_vector_array_real)
     #print len(cntr_ptr_vector_array_real)
 
     #TODO The value of cntr_ptr_vector seem different
     # The reason is when read data from txt file ,the textscan in Matlab will lose data precision
     #So we will read value from file first
     #cntr_ptr_vector_array_imag = reshape(cntr_ptr_vector(2:2:2*(nvgrid) * (nugrid)),nugrid,nvgrid)';
-    cntr_ptr_vector_array_imag = np.reshape(cntr_ptr_vector[1:2*nvgrid*nugrid:2],(nugrid,nvgrid))
-    cntr_ptr_vector_array_imag = np.transpose(cntr_ptr_vector_array_imag)
+    cntr_ptr_vector_array_imag = np.reshape(cntr_ptr_vector[1:2*nvgrid*nugrid:2],(nvgrid,nugrid))
+    #cntr_ptr_vector_array_imag = np.transpose(cntr_ptr_vector_array_imag)
     import matplotlib.pyplot as plt
     plt.figure()
     plt.contour(cntr_ptr_vector_array_real)
@@ -251,15 +264,15 @@ def uv_grid(uv_data,my_units,uvbin,uvb,gcf,domap):
             print 'real and image is '
             print cntr_ptr_vector_array_real[i][0],
             print cntr_ptr_vector_array_imag[i][0]
-            print cntr_ptr_vector_array.size
-            print cntr_ptr_vector_array[0].size
-            print cntr_ptr_vector_array[0][0]
+            #print cntr_ptr_vector_array.size
+            #print cntr_ptr_vector_array[0].size
+            print cntr_ptr_vector_array[0][i]
         #print '*'*80
         #print cntr_ptr_vector
         #print np.transpose(cntr_ptr_vector_array)
         #print '*'*80
         print 'NOW'
-        print len(cntr_ptr_vector)
-        print (cntr_ptr_vector[0])
-        print cntr_ptr_vector_array[0]
+        #print len(cntr_ptr_vector)
+        #print (cntr_ptr_vector[0])
+        #print cntr_ptr_vector_array[0]
     return [cntr_ptr_vector,cntr_ptr_vector_array]
